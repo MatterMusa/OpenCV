@@ -31,18 +31,18 @@ public class Dym {
         window.setVisible(true);
 
         //Mat img = Imgcodecs.imread("D:\\Ringelmann\\Flare.jpg");
-        String path = "D:\\Ringelmann\\rev5\\";
-        System.out.println("Начал");
-        for(int i=85;i<115;i++) {
-            Mat img = Imgcodecs.imread(path+"Good_color\\Good_"+i+".jpg");
-            if(img.empty()) {
-                System.out.println("Пустой"+i);
-            } else {
-                Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
-                Imgcodecs.imwrite(path + "Good\\Good_" + i + ".jpg", img);
-            }
-        }
-        System.out.println("Завершил");
+//        String path = "D:\\Ringelmann\\rev5\\";
+//        System.out.println("Начал");
+//        for(int i=85;i<115;i++) {
+//            Mat img = Imgcodecs.imread(path+"Good_color\\Good_"+i+".jpg");
+//            if(img.empty()) {
+//                System.out.println("Пустой"+i);
+//            } else {
+//                Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
+//                Imgcodecs.imwrite(path + "Good\\Good_" + i + ".jpg", img);
+//            }
+//        }
+//        System.out.println("Завершил");
 
 //        if (img.empty()) {
 //            System.out.println("Не удалось загрузить изображение");
