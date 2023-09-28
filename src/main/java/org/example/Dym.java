@@ -7,6 +7,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
 import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,18 +32,20 @@ public class Dym {
         window.setVisible(true);
 
         //Mat img = Imgcodecs.imread("D:\\Ringelmann\\Flare.jpg");
-//        String path = "D:\\Ringelmann\\rev5\\";
-//        System.out.println("Начал");
-//        for(int i=85;i<115;i++) {
+        String path = "D:\\Ringelmann\\rev10\\good.txt";
+        System.out.println("Начал");
+//        int count = 16;
+//        for(int i=1;i<16;i++) {
 //            Mat img = Imgcodecs.imread(path+"Good_color\\Good_"+i+".jpg");
 //            if(img.empty()) {
 //                System.out.println("Пустой"+i);
 //            } else {
 //                Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
 //                Imgcodecs.imwrite(path + "Good\\Good_" + i + ".jpg", img);
+//                count++;
 //            }
 //        }
-//        System.out.println("Завершил");
+        System.out.println("Завершил");
 
 //        if (img.empty()) {
 //            System.out.println("Не удалось загрузить изображение");
@@ -65,7 +68,7 @@ public class Dym {
 //        System.out.println(r2.maxVal + " " + r2.maxLoc);
 //        img.release(); img2.release();
 //        result.release(); result2.release();
-        //test();
+        test();
     }
 
     public static void showImage(Mat img) {
@@ -83,31 +86,49 @@ public class Dym {
     }
 
     public static void test() {
-        image = Imgcodecs.imread("D:\\Ringelmann\\cascadeClassificator\\Good\\Good_7.jpg");
-        //performGammaCorrection();
+        image = Imgcodecs.imread("D:\\Ringelmann\\rev13\\Good\\Good_15.jpg");
+        performGammaCorrection();
         //showImage(image);
+        //Mat imgGray = new Mat();
+        //Imgproc.cvtColor(image, imgGray, Imgproc.COLOR_BGR2GRAY);
+
+//        Mat edges = new Mat();
+//        Imgproc.Canny(image, edges, 50, 90);
+//        showImage(edges);
+//        Mat edgesCopy = edges.clone(); // Создаем копию
+//        ArrayList<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+//        Mat hierarchy = new Mat();
+//        Imgproc.findContours(edgesCopy, contours, hierarchy,
+//                Imgproc.RETR_TREE,
+//                Imgproc.CHAIN_APPROX_SIMPLE);
+//        System.out.println(contours.size());
+//        System.out.println(hierarchy.size());
+//        System.out.println(hierarchy.dump());
+//        Imgproc.drawContours(image, contours, -1, new Scalar(255,255,255));
+        //showImage(image);
+
         Mat img2 = new Mat();
         Imgproc.cvtColor(image, img2, Imgproc.COLOR_BGR2GRAY);
-        int threshold_level = 60;
-        List<int[]> coords = new ArrayList<>();
-        for (int i = 0; i < img2.height(); i++) {
-            for (int j = 0; j < img2.width(); j++) {
-                if (Arrays.stream(img2.get(i, j)).toArray()[0] < threshold_level) {
-                    coords.add(new int[]{i, j});
-                    //System.out.println(i+" "+j);
-                }
-            }
-        }
 //        for(int i=0;i<coords.size();i++) {
 //            image.put(coords.get(i)[0], coords.get(i)[1], new double[]{255,20,147});
 //        }
-        CascadeClassifier classifier = new CascadeClassifier("D:\\Ringelmann\\rev4\\result\\cascade.xml");
+        CascadeClassifier classifier = new CascadeClassifier("D:\\Ringelmann\\rev13\\result\\cascade.xml");
         MatOfRect rectVector = new MatOfRect();
         classifier.detectMultiScale(image, rectVector);
+        int threshold_level = 60;
+        List<int[]> coords = new ArrayList<>();
         for (Rect rect : rectVector.toArray()) {
             Imgproc.rectangle(image, new Point(rect.x, rect.y),
                     new Point(rect.x + rect.width, rect.y + rect.height),
                     new Scalar(0, 255, 0));
+            for (int i = rect.y; i <= rect.y + rect.height; i++) {
+                for (int j = rect.x; j <= rect.x + rect.width; j++) {
+                    if (Arrays.stream(img2.get(i, j)).toArray()[0] < threshold_level) {
+                        coords.add(new int[]{i, j});
+                        //System.out.println(i+" "+j);
+                    }
+                }
+            }
         }
 
         showImage(image);
@@ -133,7 +154,7 @@ public class Dym {
                 sum+=5;
             }
         }
-        System.out.println(sum*100/coords.size()/5);
+        System.out.println(sum*100/coords.size()/6);
 
     }
 
@@ -144,7 +165,8 @@ public class Dym {
     }
 
     private static void performGammaCorrection() {
-        double gammaValue = 100;
+        double gammaValue = 0.8;
+        //double gammaValue = 100;
         Mat lookUpTable = new Mat(1, 256, CvType.CV_8U);
         byte[] lookUpTableData = new byte[(int) (lookUpTable.total()*lookUpTable.channels())];
         for (int i = 0; i < lookUpTable.cols(); i++) {
@@ -153,5 +175,6 @@ public class Dym {
         lookUpTable.put(0, 0, lookUpTableData);
         Mat img = new Mat();
         Core.LUT(image, lookUpTable, img);
+        image = img;
     }
 }
