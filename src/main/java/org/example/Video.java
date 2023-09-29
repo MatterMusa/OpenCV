@@ -7,22 +7,25 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 
 import javax.swing.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Video {
 
     public static void main(String[] args) {
         System.load("D:\\JavaLibs\\opencv-4.7.0\\build\\java\\x64\\opencv_java470.dll");
         Mat frame = new Mat();
-//        VideoCapture camera = new VideoCapture("D:\\Ringelmann\\rev13\\Video\\recentvideo_1.mp4");
-//        int numb = 401;
+//        VideoCapture camera = new VideoCapture("D:\\Ringelmann\\rev14\\Video\\Smoke.mp4");
+//        int numb = 495;
 //        System.out.println("Start");
 //        while (true) {
 //            if (camera.read(frame)) {
 //                Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-//                Range rowRange = new Range(148, 480); //95 837, top left// 436,837 top right,,//95 895,, btm left, //436, 895 btm right
-//                Range colRange = new Range(0, 400);
+//                Range rowRange = new Range(333, 1280); //95 837, top left// 436,837 top right,,//95 895,, btm left, //436, 895 btm right
+//                Range colRange = new Range(81, 720);
 //                frame = new Mat(frame, colRange, rowRange);
-//                Imgcodecs.imwrite("D:\\Ringelmann\\rev13\\Frames\\Good_" + numb + ".jpg", frame);
+//                System.out.println("Good\\Good_"+numb+".jpg 1 0 0 947 639");
+//                Imgcodecs.imwrite("D:\\Ringelmann\\rev14\\Frames\\Good_" + numb + ".jpg", frame);
 //                numb++;
 //            }
 //        }
@@ -59,25 +62,36 @@ public class Video {
 //            Imgproc.cvtColor(img, img, Imgproc.COLOR_BGR2GRAY);
 //            Imgcodecs.imwrite("D:\\Ringelmann\\rev13\\Frames\\Good_" + i + ".jpg", img);
 //        }
-        for(int i=401;i<481;i++) {
-            System.out.println("Good\\Good_"+i+".jpg 1 0 0 332 400");
+//        for(int i=401;i<481;i++) {
+//            System.out.println("Good\\Good_"+i+".jpg 1 0 0 332 400");
+//        }
+//        for(int i=481;i<802;i++) {
+//            System.out.println("Good\\Good_"+i+".jpg 1 0 0 330 255");
+//        }
+//        System.out.println("Good\\Good_802.jpg 1 0 0 500 346");
+//        System.out.println("Good\\Good_803.jpg 1 0 0 500 416");
+//        System.out.println("Good\\Good_804.jpg 1 0 0 500 496");
+//        System.out.println("Good\\Good_805.jpg 1 0 0 500 419");
+//        System.out.println("Good\\Good_806.jpg 1 0 0 500 372");
+//        System.out.println("Good\\Good_807.jpg 1 0 0 500 357");
+//        System.out.println("Good\\Good_808.jpg 1 0 0 500 407");
+//        System.out.println("Good\\Good_809.jpg 1 0 0 500 425");
+//        System.out.println("Good\\Good_810.jpg 1 0 0 500 495");
+//        System.out.println("Good\\Good_811.jpg 1 0 0 500 489");
+//        System.out.println("Good\\Good_812.jpg 1 0 0 500 497");
+//        for(int i=813;i<1631;i++) {
+//            System.out.println("Good\\Good_"+i+".jpg 1 0 0 420 365");
+//        }
+        int numb = 495;
+        System.out.println("Start");
+        for(int i=680;i<=1999;i++) {
+            if(Files.exists(Path.of("D:\\Ringelmann\\rev14\\Frames\\Good_" + i + ".jpg"))) {
+                Mat img = Imgcodecs.imread("D:\\Ringelmann\\rev14\\Frames\\Good_" + i + ".jpg");
+                Imgcodecs.imwrite("D:\\Ringelmann\\rev14\\Frames\\Good_" + numb + ".jpg", img);
+                System.out.println("Good\\Good_"+numb+".jpg 1 0 0 947 639");
+                numb++;
+            }
         }
-        for(int i=481;i<802;i++) {
-            System.out.println("Good\\Good_"+i+".jpg 1 0 0 330 255");
-        }
-        System.out.println("Good\\Good_802.jpg 1 0 0 500 346");
-        System.out.println("Good\\Good_803.jpg 1 0 0 500 416");
-        System.out.println("Good\\Good_804.jpg 1 0 0 500 496");
-        System.out.println("Good\\Good_805.jpg 1 0 0 500 419");
-        System.out.println("Good\\Good_806.jpg 1 0 0 500 372");
-        System.out.println("Good\\Good_807.jpg 1 0 0 500 357");
-        System.out.println("Good\\Good_808.jpg 1 0 0 500 407");
-        System.out.println("Good\\Good_809.jpg 1 0 0 500 425");
-        System.out.println("Good\\Good_810.jpg 1 0 0 500 495");
-        System.out.println("Good\\Good_811.jpg 1 0 0 500 489");
-        System.out.println("Good\\Good_812.jpg 1 0 0 500 497");
-        for(int i=813;i<1631;i++) {
-            System.out.println("Good\\Good_"+i+".jpg 1 0 0 420 365");
-        }
+        System.out.println("Last numb="+numb);
     }
 }

@@ -86,8 +86,8 @@ public class Dym {
     }
 
     public static void test() {
-        image = Imgcodecs.imread("D:\\Ringelmann\\rev13\\Good\\Good_15.jpg");
-        performGammaCorrection();
+        image = Imgcodecs.imread("D:\\Ringelmann\\rev15\\Good\\Good_25.jpg");
+        //performGammaCorrection();
         //showImage(image);
         //Mat imgGray = new Mat();
         //Imgproc.cvtColor(image, imgGray, Imgproc.COLOR_BGR2GRAY);
@@ -112,18 +112,34 @@ public class Dym {
 //        for(int i=0;i<coords.size();i++) {
 //            image.put(coords.get(i)[0], coords.get(i)[1], new double[]{255,20,147});
 //        }
-        CascadeClassifier classifier = new CascadeClassifier("D:\\Ringelmann\\rev13\\result\\cascade.xml");
+        CascadeClassifier classifier = new CascadeClassifier("D:\\Ringelmann\\rev15\\result\\cascade.xml");
         MatOfRect rectVector = new MatOfRect();
         classifier.detectMultiScale(image, rectVector);
-        int threshold_level = 60;
+        int threshold_level = 200;
         List<int[]> coords = new ArrayList<>();
-        for (Rect rect : rectVector.toArray()) {
+        List<Rect> temp = rectVector.toList();
+        Rect[] rects = rectVector.toArray();
+        boolean flagInter = false;
+        for (int i=0;i<temp.size()-1;i++) {
+            for(int j=i+1;j<temp.size();j++) {
+                if(intersect(temp.get(i), temp.get(j)).area() > 0) {
+                    Rect newrect = merge(temp.get(i), temp.get(j));
+                    temp.set(j, newrect);
+                    flagInter = true;
+                    //temp.add(newrect);
+                }
+            }
+            if(flagInter)
+                temp.set(i, new Rect());
+            flagInter = false;
+        }
+        for (Rect rect : temp) {
             Imgproc.rectangle(image, new Point(rect.x, rect.y),
                     new Point(rect.x + rect.width, rect.y + rect.height),
                     new Scalar(0, 255, 0));
             for (int i = rect.y; i <= rect.y + rect.height; i++) {
                 for (int j = rect.x; j <= rect.x + rect.width; j++) {
-                    if (Arrays.stream(img2.get(i, j)).toArray()[0] < threshold_level) {
+                    if (Arrays.stream(img2.get(i, j)).toArray()[0] < threshold_level && !coords.contains(new int[]{i, j})) {
                         coords.add(new int[]{i, j});
                         //System.out.println(i+" "+j);
                     }
@@ -176,5 +192,22 @@ public class Dym {
         Mat img = new Mat();
         Core.LUT(image, lookUpTable, img);
         image = img;
+    }
+
+    public static Rect intersect(Rect A, Rect B) {
+        int left = Integer.max(A.x, B.x);
+        int top = Integer.max(A.y, B.y);
+        int right = Integer.min(A.x + A.width, B.x + B.width);
+        int bottom = Integer.min(A.y + A.height, B.y + B.height);
+        if (left <= right && top <= bottom) return new Rect(left, top, right - left, bottom - top);
+        else return new Rect();
+    }
+
+    public static Rect merge(Rect A, Rect B) {
+        int left = Integer.min(A.x, B.x);
+        int top = Integer.min(A.y, B.y);
+        int right = Integer.max(A.x + A.width, B.x + B.width);
+        int bottom = Integer.max(A.y + A.height, B.y + B.height);
+        return new Rect(left, top, right - left, bottom - top);
     }
 }
